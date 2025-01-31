@@ -31,9 +31,8 @@ function checkPost_projects(req, res, next) {
 }
 
 function checkPut_projects(req, res, next) {
-    const { name, description } = req.body;
-    const completed = req.body.completed !== undefined;
-    if (!name || !description || !completed) {
+    const { name, description, completed } = req.body;
+    if (!name || !description || completed === undefined) {
         res.status(400).json({ message: 'name, description, and completed are required' });
     } else {
         next();

@@ -12,6 +12,9 @@ server.use(express.json());
 
 server.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} to ${req.url}`)
+    if (req.method === 'POST' || req.method === 'PUT') {
+        console.log('Request Body:', req.body);
+    }
     next();
 });
 
@@ -22,11 +25,11 @@ server.get('/', (req, res) => {
     res.status(200).json({ message: 'Hello World' });
 });
 
-server.get('*', (req, res) => {
+server.use('*', (req, res) => {
     res.status(404).json({ message: 'Nothing to see here...' });
 });
 
-server.use((error, req, res, next) => {
+server.use((error, req, res, next) => { //eslint-disable-line
     console.error(error.stack);
     res.status(error.status || 500).json({ message: error.message });
 });
