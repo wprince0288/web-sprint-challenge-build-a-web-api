@@ -1,4 +1,6 @@
 const express = require('express');
+const actionsRouter = require('./actions/actions-router');
+const projectsRouter = require('./projects/projects-router');
 const server = express();
 
 // Configure your server here
@@ -6,27 +8,27 @@ const server = express();
 // Build your projects router in /api/projects/projects-router.js
 // Do NOT `server.listen()` inside this file!
 
-// router.get('/', (req, res) => {
-//     res.send('Stuff')
-// })
-
-const actionsRouter = require('./actions/actions-router');
-const projectsRouter = require('./projects/projects-router');
-
 server.use(express.json());
 
-server.use('api/actions', actionsRouter);
-server.use('api/projects', projectsRouter);
-
-server.use((req, res) => {
-    res.status(404).json({ message: 'Route no here' });
+server.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} to ${req.url}`)
+    next();
 });
 
-server.use((err, req, res, next) => {
-    res.status(err.status || 500).json({
-        message: err.message || "Sever no worky",
-    });
+server.use('/api/actions', actionsRouter);
+server.use('/api/projects', projectsRouter);
+
+server.get('/', (req, res) => {
+    res.status(200).json({ message: 'Hello World' });
 });
 
+server.get('*', (req, res) => {
+    res.status(404).json({ message: 'Nothing to see here...' });
+});
+
+server.use((error, req, res, next) => {
+    console.error(error.stack);
+    res.status(error.status || 500).json({ message: error.message });
+});
 
 module.exports = server;

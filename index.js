@@ -13,21 +13,10 @@ I need this code, but don't know where, perhaps should make some middleware, don
 Pull your server into this file and start it!
 */
 require('dotenv').config();
-const express = require('express');
-const server = express();
-
-server.use(express.json());
-
-server.get('/hello', (req, res) => {
-    res.json('hello, there');
-});
-
-server.use('*', (req, res) => {
-    res.json({ message: 'API is UP!' })
-});
+const server = require('./api/server');
 
 const PORT = process.env.PORT || 9000;
 
 server.listen(PORT, () => {
-    console.log(`Server Running on http://localhost:${PORT}`)
+    console.log(`\n*** Server Running on http://localhost:${PORT} ***\n`)
 });
